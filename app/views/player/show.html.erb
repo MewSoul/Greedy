@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="bet span12">
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+
+	<h3 style="text-align:center"><%= @players.name %></h3>
+
+	<div class="cdv span6 offset3">
+	  <div>
+	    <div class="span3">
+	      <%= image_tag("player/" + @players.photo_path, :class => "pic_cdv") %>
+	    </div>
+
+	    <div class="span8">
+	      <table class="table">
+		<tbody>
+		  <tr><td>Name : <%= @players.first_name %> "<%= @players.name %>" <%= @players.last_name %></td></tr>
+		  <tr><td>Country : <%= @players.country %></td></tr>
+		  <tr><td>Team : Evil Geniuses</td></tr>
+		</tbody>
+	      </table>
+	    </div>
+	  </div>
+
+	  <div class="span12" style="margin:0">
+	  <ul class="nav nav-list">
+	    <li class="divider"></li>
+	    <p>Informations :</p>
+	    </br></br>
+
+	    </ul>
+	  </div>
+
+	</div>
+      </div>
+    </div>
+
+  </div>
+</div>

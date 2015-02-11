@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  start: 2013-08-31
+  end: 2013-08-31
+  description: MyText
+  location: MyString
+  nbPlayers: 1
+
+two:
+  name: MyString
+  start: 2013-08-31
+  end: 2013-08-31
+  description: MyText
+  location: MyString
+  nbPlayers: 1

@@ -1,0 +1,149 @@
+    <% nbPlayers = @tournament.nb_players %>
+    <% nbPlace = @tournament.nb_players / 2 %>
+    <% i = 0 %>
+
+{
+   "teams" :
+[
+<% while i < nbPlace do %>
+   <% if i != 0 %>
+   <%= "," %>
+   <% end %>
+   <% a = 0 %>
+   <% find = 0 %>
+   <% while a < @round.count %>
+      <% if @round[a].match == i %>
+      <% if @round[a].id_player_1 == 0 %>
+      <% player_1 = "" %>
+      <% else %>
+      <% player_1 = Player.find(@round[a].id_player_1).name %>
+      <% end %>
+      <% if @round[a].id_player_2 == 0 %>
+      <% player_2 = "" %>
+      <% else %>
+      <% player_2 = Player.find(@round[a].id_player_2).name %>
+      <% end %>
+      [ "<%= player_1 %>", "<%= player_2 %>"]
+      <% find = 1 %>
+      <% end %>
+      <% a += 1 %>
+      <% end %>
+      <% if find == 0 %>
+      ["",""]
+      <% end %>
+      <% i += 1 %>
+<% end %>
+<% i = 0 %>
+<% pos = nbPlace - 1 %>
+],
+  "results" :
+[[
+<%= "[" %>
+<% if @tournament.tournament_type == 1 %>
+<% while i <= @tournament.nb_players - 2 %>
+   <% a = 0 %>
+   <% find = 0 %>
+   <% while a < @round.count %>
+      <% if @round[a].match == i %>
+      [<%= @round[a].score_1 %>, <%= @round[a].score_2 %>]
+      <% find = 1 %>
+      <% end %>
+      <% a += 1 %>
+   <% end %>
+   <% if find == 0 %>
+   [0,0]
+   <% end %>
+   <% if i == pos %>
+   <% nbPlace = nbPlace / 2 %>
+   <% pos = pos + nbPlace %>
+   <%= "],[" %>
+   <% else %>
+   <%= "," %>
+   <% end %>
+   <% i += 1 %>
+<% end %>
+<%= "]" %>
+],
+<% nbPlace = (@tournament.nb_players / 4)  %>
+<% pos = pos + nbPlace ; %>
+[
+<%= "[" %>
+<% while i <= (@tournament.nb_players - 2) * 2 %>
+   <% a = 0 %>
+   <% find = 0 %>
+   <% while a < @round.count %>
+      <% if @round[a].match == i %>
+      [<%= @round[a].score_1 %>, <%= @round[a].score_2 %>]
+      <% find = 1 %>
+      <% end %>
+      <% a += 1 %>
+   <% end %>
+   <% if find == 0 %>
+   [0,0]
+   <% end %>
+   <% if i == pos  %>
+   <% nbPlace = nbPlace / 2 %>
+   <% nbPlace %>
+   <% pos = pos + nbPlace +1%>
+   <%= "],[" %>
+   <% else %>
+   <%= "," %>
+   <% end %>
+   <% i += 1 %>
+<% end %>
+<%= "]" %>
+],
+<%# nbPlace = (@tournament.nb_players / 2)>
+<% pos = pos + 1 ; %>
+[
+<%= "[" %>
+<% ende = i + 2 %>
+<% while i <  ende %>
+   <% if i != ende - 2 %>
+   <%= "," %>
+   <% end %>
+   <% a = 0 %>
+   <% find = 0 %>
+   <% while a < @round.count %>
+      <% if @round[a].match == i %>
+      [<%= @round[a].score_1 %>, <%= @round[a].score_2 %>]
+      <% find = 1 %>
+      <% end %>
+      <% a += 1 %>
+   <% end %>
+   <% if find == 0 %>
+   [0,0]
+   <% end %>
+   <% i += 1 %>
+<% end %>
+<% else %>
+<% while i <= @tournament.nb_players %>
+   <% a = 0 %>
+   <% find = 0 %>
+   <% while a < @round.count %>
+      <% if @round[a].match == i %>
+      [<%= @round[a].score_1 %>, <%= @round[a].score_2 %>]
+      <% find = 1 %>
+      <% end %>
+      <% a += 1 %>
+   <% end %>
+   <% if find == 0 %>
+   [0,3]
+   <% end %>
+   <% if i == pos %>
+   <% nbPlace = nbPlace / 2 %>
+   <% if nbPlace == 1 %>
+   <% nbPlace = 2 %>
+   <% end %>
+   <% pos = pos + nbPlace %>
+   <%= "],[" %>
+   <% elsif i + 1 <= @tournament.nb_players %>
+   <%= "," %>
+   <% end %>
+   <% i += 1 %>
+<% end %>
+<% end %>
+<%= "]" %>
+]
+]
+}

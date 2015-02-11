@@ -1,0 +1,25 @@
+<div class="container">
+  <div class="bet span12">
+
+    <h3>Here are the best gamblers of the month !</h3>
+
+    <table class="table table-bordered table-hover span10" style="table-layout: fixed; word-wrap: break-word; margin: 0 auto; float: none; background:white; margin-top: 30px">
+      <tr>
+	<th class="span4">Username</th>
+	<th class="span4">Earnings</th>
+      </tr>
+      <tbody>
+	<% @users.order("credits DESC").each do |user| %>
+	<div style="white-space: normal">
+	  <tr>
+	    <td><%= user.email %></td>
+	    <td><%= user.earnings %> credits</td>
+	  </tr>
+	</div>
+	<% end %>
+      </tbody>
+    </table>
+    <%= paginate @users  %>
+
+  </div>
+</div>

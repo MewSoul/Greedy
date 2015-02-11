@@ -1,0 +1,177 @@
+<% game = params[:id] %>
+
+<% if game == "sc2" %><%= image_tag("banner/bannersc2.jpg") %>
+<% elsif game == "lol" %><%= image_tag("banner/bannerlol.jpg") %>
+<% end %>
+
+
+<div class="container">
+
+    <div class="bet span12">
+
+    <div class="span2">
+      Switch game : 
+      <a href= <% if game == "sc2" %>
+	 "#"
+	 <% else %>
+	 "/bet/sc2"
+	 <% end %>
+	 ><%= image_tag("icon/sc2game.jpg", size: "30") %></a>
+
+      <a href= <% if game == "lol" %>
+	 "#"
+	 <% else %>
+	 "/bet/lol"
+	 <% end %>
+	 ><%= image_tag("icon/lolgame.jpg", size: "30") %></a>
+    </div>
+
+    <br/><br/>
+
+    <div>
+      <h2>
+	<% if game == "sc2" %>Starcraft 2
+	<% elsif game == "lol" %>League of Legends
+	<% end %>
+      </h2>
+    </div>
+
+    <h3 class="tournaments_table">Games to bet on</h3>
+
+    <div class="span12" style="margin: 0;">
+    <%- flash.each do |name, msg| -%>
+	<% if flash[:ok] %>
+	<div class="alert alert-success alert-block">
+	  <button type='button' class='close' data-dismiss='alert'>x</button>
+	  <%= msg %>
+	</div>
+	<% elsif flash[:ko] %>
+	<div class="alert alert-error alert-block">
+	  <button type='button' class='close' data-dismiss='alert'>x</button>
+	  <%= msg %>
+	</div>
+	<% end %>
+	<%- end -%>
+    </div>
+
+    <div class="row-fluid">
+      <% @match_one.each do |match| %>
+      <% if match.tournament.game == game %>
+      <% sum = match.bet_id_1 + match.bet_id_2 %>
+      <%= form_tag({controller: "bet", action: "greedy"}, method: "post", remote: true, class: "form_custom") do %>
+      <div class="game_to_bet span5 offset1">
+	<div class="inline">
+	  <% Player.where("id = ?", match.id_player_1).each do |player| %>
+	  <p><%= player.name %></p>
+	  <label>
+	  <%= image_tag("player/" + player.photo_path) %>
+	  <p><%= radio_button_tag(:player, "1") %></p>
+	  </label>
+	  <% end %>
+	  <p><%= number_with_precision(match.bet_id_1 * 100.0 / sum, :precision => 2) %>%</p>
+	</div>
+	vs
+	<div class="inline">
+	  <% Player.where("id = ?", match.id_player_2).each do |player| %>
+	  <p><%= player.name %></p>
+	  <label>
+	  <%= image_tag("player/" + player.photo_path) %>
+	  <p><%= radio_button_tag(:player, "2") %></p>
+	  </label>
+	  <% end %>
+	  <p><%= number_with_precision(match.bet_id_2 * 100.0 / sum, :precision => 2) %>%</p>
+	</div>
+	<div>
+	  <%= number_field_tag 'nb_cr', '1', min: 1, max: 999, :class => 'bet_box' %>cr
+	  <%= hidden_field_tag 'round_id', match.id %>
+	  <%= submit_tag "Be greedy !", class: "btn btn-primary btn" %>
+	  <% end %>
+	</div>
+      </div>
+      <% end %>
+      <% end %>
+
+      <% @match_two.each do |match| %>
+      <% if match.tournament.game == game %>
+      <% sum = match.bet_id_1 + match.bet_id_2 %>
+      <%= form_tag({controller: "bet", action: "greedy"}, method: "post", remote: true) do %>
+      <div class="game_to_bet span5">
+	<div class="inline">
+	  <% Player.where("id = ?", match.id_player_1).each do |player| %>
+	  <p><%= player.name %></p>
+	  <label>
+	  <%= image_tag("player/" + player.photo_path) %>
+	  <p><%= radio_button_tag(:player, "1") %></p>
+	  </label>
+	  <% end %>
+	  <p><%= number_with_precision(match.bet_id_1 * 100.0 / sum, :precision => 2) %>%</p>
+	</div>
+	vs
+	<div class="inline">
+	  <% Player.where("id = ?", match.id_player_2).each do |player| %>
+	  <p><%= player.name %></p>
+	  <label>
+	  <%= image_tag("player/" + player.photo_path) %>
+	  <p><%= radio_button_tag(:player, "2") %></p>
+	  </label>
+	  <% end %>
+	  <p><%= number_with_precision(match.bet_id_2 * 100.0 / sum, :precision => 2) %>%</p>
+	</div>
+	<div>
+	  <%= number_field_tag 'nb_cr', '1', min: 1, max: 999, :class => 'bet_box' %>cr
+	  <%= hidden_field_tag 'round_id', match.id %>
+	  <%= submit_tag "Be greedy !", class: "btn btn-primary btn" %>
+	  <% end %>
+	</div>
+      </div>
+      <% end %>
+      <% end %>
+    </div>
+
+    <div class="tournaments_table">
+      <h3>Tournaments in progress</h3>
+      <table class="table table-bordered table-hover span10" style="table-layout: fixed; word-wrap: break-word; margin: 0 auto; float: none; background:white;">
+	<tr>
+	  <th class="span3">Location</th>
+	  <th class="span3">Name</th>
+	  <th class="span3">Cash prize</th>
+	</tr>
+	<tbody>
+	  <% @tournaments.where("tournament_start <= ? AND tournament_end >= ?", Time.zone.now, Time.zone.now).each do |tournament| %>
+	  <div style="white-space: normal">
+	    <tr>
+	      <td><%= tournament.location %></td>
+	      <td><%= link_to tournament.name, ('/tournament/' + tournament.id.to_s) %></td>
+	      <td><%= tournament.cash %>$</td>
+	    </tr>
+	  </div>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+
+    <div class="tournaments_table">
+      <h3>Upcoming tournaments</h3>
+      <table class="table table-bordered table-hover span10" style="table-layout: fixed; word-wrap: break-word; margin: 0 auto; float: none; background:white;">
+	<tr>
+	  <th class="span2">Location</th>
+	  <th class="span3">Name</th>
+	  <th class="span2">Cash prize</th>
+	  <th class="span3">Starts on the</th>
+	</tr>
+	<tbody>
+	  <% @tournaments.where("tournament_start > ?", Time.zone.now).each do |tournament| %>
+	  <div style="white-space: normal">
+	    <tr>
+	      <td><%= tournament.location %></td>
+	      <td><%= link_to tournament.name, ('/tournament/' + tournament.id.to_s) %></td>
+	      <td><%= tournament.cash %>$</td>
+	      <td><%= tournament.tournament_start.to_formatted_s(:rfc822) %></td>
+	    </tr>
+	  </div>
+	  <% end %>
+	</tbody>
+      </table>
+    </div>
+  </div>
+</div>

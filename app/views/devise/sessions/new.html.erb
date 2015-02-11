@@ -1,0 +1,88 @@
+<script type="text/javascript">
+EnableSubmit = function(val)
+{
+  var sbmt = document.getElementById("Accept");
+
+  if (val.checked == true) {
+    sbmt.disabled = false;
+  } else {
+    sbmt.disabled = true;
+  }
+}
+</script>
+
+<div id="main">
+  <div class="container">
+    <section id="register">
+      <div class="hgroup">
+        <h1>Register or Sign in</h1>
+        <ul class="breadcrumb pull-right">
+          <li><a href="/">Home</a> <span class="divider">/</span></li>
+          <li class="active">Register or Sign in</li>
+        </ul>
+      </div>
+      <div class="row">
+        <div class="signin span6">
+
+	    <%- flash.each do |name, msg| -%>
+	    <div class="alert alert-error alert-block">
+	      <button type='button' class='close' data-dismiss='alert'>x</button>
+	      <%= msg %>
+	    </div>
+            <%- end -%>
+
+            <h3>Sign in</h3>
+
+            <p class="sign_title">Log in with your site account</p>
+
+	    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+
+	    <fieldset>
+	      <div><input id="user_email" name="user[email]" type="email" value="" placeholder="Email" class="input-xlarge"/></div>
+
+	      <div><input id="user_password" name="user[password]" type="password" placeholder="Password" class="input-xlarge"></div>
+
+	      <% if devise_mapping.rememberable? -%>
+              <div class="forgot">
+		<label class="checkbox">
+		  <input id="user_remember_me" name="user[remember_me]" type="checkbox" value="1" checked="checked"> Remember me
+		</label><a href="/users/password/new">Forgot password?</a>
+	      </div>
+	      <% end -%>
+
+	      <button type="submit" class="btn btn-primary btn-large">Sign in</button>
+	      </fieldset>
+	    <% end %>
+          </div>
+
+        <div class="signup span6">
+
+	  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+	  <%= devise_error_messages! %>
+	  <fieldset>
+	    <div class="social_sign">
+	      <h3>Don't have a site account yet?</h3>
+              <a><i class="icon icon-user"></i></a>
+            </div>
+	    <p class="sign_title">Create one now, it's fast & free!</p>
+
+	    <div><input id="user_email" name="user[email]" type="email" value="" placeholder="Email" class="input-xlarge"/></div>
+
+	    <div><input id="user_password" name="user[password]" type="password" placeholder="Password" class="input-xlarge"/></div>
+
+	    <div><input id="user_password_confirmation" name="user[password_confirmation]" type="password" placeholder="Confirm password" class="input-xlarge"/></div>
+
+	    <label class="checkbox">
+	      <input name="checkboxes" value="Option one" type="checkbox" class="checkbox" onClick="EnableSubmit(this)" />
+	      I agree to the <a href="#">terms and conditions</a>
+	    </label>
+
+	    <button type="submit" class="btn btn-success btn-large delete" disabled="disabled" id="Accept" >Create your account</button>
+
+	  </fieldset>
+	  <% end %>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

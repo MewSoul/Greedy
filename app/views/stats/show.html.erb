@@ -1,0 +1,83 @@
+<% game = params[:id] %>
+
+<% if game == "sc2" %><%= image_tag("banner/bannersc2.jpg") %>
+<% elsif game == "lol" %><%= image_tag("banner/bannerlol.jpg") %>
+<% end %>
+
+
+<div class="container">
+  <div class="bet span12">
+
+    <div class="span2">
+      Switch game : 
+      <a href= <% if game == "sc2" %>
+	 "#"
+	 <% else %>
+	 "/stats/sc2"
+	 <% end %>
+	 ><%= image_tag("icon/sc2game.jpg", size: "30") %></a>
+
+      <a href= <% if game == "lol" %>
+	 "#"
+	 <% else %>
+	 "/stats/lol"
+	 <% end %>
+	 ><%= image_tag("icon/lolgame.jpg", size: "30") %></a>
+    </div>
+
+    <br/><br/>
+
+    <div>
+      <h2>
+	<% if game == "sc2" %>Starcraft 2
+	<% elsif game == "lol" %>League of Legends
+	<% end %>
+      </h2>
+    </div>
+
+    <div class="tournaments_table">
+      <h3 class="tournaments_table">Players List</h3>
+
+      <script>
+	$(function() {
+        $("table#sortedTable").tablesorter({ sortList: [[0,0]] });
+	});
+      </script>
+      <table class="table table-bordered table-hover span10 tablesorter" style="table-layout: fixed; word-wrap: break-word; margin: 0 auto; float: none; background:white;" id="sortedTable" >
+	<thead>
+	  <tr>
+	    <th class="headerSortUp span3">Name</th>
+	    <th class="span3">Country</th>
+	    <th class="span3">Race</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  <% @players.each do |player| %>
+	  <div style="white-space: normal">
+	    <tr>
+	      <td style="vertical-align: middle"><%= link_to player.name, '/player/' + player.name %></td>
+	      <td style="vertical-align: middle"><%= image_tag("flags/" + player.country + ".jpg") %> <%= player.country %></td>
+	      <td style="vertical-align: middle">
+
+		<% case player.id_race %>
+		<% when "1" %>
+		<%= image_tag("races/zerg.jpg", :size => "30") %>
+		<span style="display:none">1</span>
+		<% when "2" %>
+		<%= image_tag("races/terran.jpg", :size => "30") %>
+		<span style="display:none">2</span>
+		<% when "3" %>
+		<%= image_tag("races/protoss.jpg", :size => "30") %>
+		<span style="display:none">3</span>
+		<% end %>
+	      </td>
+	    </tr>
+	  </div>
+	  <% end %>
+	</tbody>
+      </table>
+      <%= paginate @players %>
+    </div>
+
+  </div>
+</div>

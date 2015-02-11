@@ -1,0 +1,42 @@
+<% if @match_one.count == 0 %>
+<% abort() %>
+<% end %>
+
+<% id_match = params[:match].to_i + 1 %>
+
+<% match = Round.find(id_match) %>
+<% sum = match.bet_id_1 + match.bet_id_2 %>
+
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true" style="margin:20px;">X</button>
+
+<%= form_tag({controller: "bet", action: "greedy"}, method: "post", remote: true) do %>
+<div class="game_to_bet offset1">
+  <div class="inline">
+    <% Player.where("id = ?", match.id_player_1).each do |player| %>
+    <p><%= player.name %></p>
+    <label>
+      <%= image_tag("player/" + player.photo_path) %>
+      <p><%= radio_button_tag(:player, "1") %></p>
+    </label>
+    <% end %>
+    <p><%= number_with_precision(match.bet_id_1 * 100.0 / sum, :precision => 2) %>%</p>
+  </div>
+  vs
+  <div class="inline">
+    <% Player.where("id = ?", match.id_player_2).each do |player| %>
+    <p><%= player.name %></p>
+    <label>
+      <%= image_tag("player/" + player.photo_path) %>
+      <p><%= radio_button_tag(:player, "2") %></p>
+    </label>
+    <% end %>
+    <p><%= number_with_precision(match.bet_id_2 * 100.0 / sum, :precision => 2) %>%</p>
+  </div>
+  <div>
+    <%= number_field_tag 'nb_cr', '1', min: 1, max: 999, :class => 'bet_box' %>cr
+    <%= hidden_field_tag 'round_id', match.id %>
+    <%= hidden_field_tag 'popup', params[:tournament] %>
+    <%= submit_tag "Be greedy !", class: "btn btn-primary btn" %>
+    <% end %>
+  </div>
+</div>

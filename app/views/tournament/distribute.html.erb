@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="bet span12">
+    <h3>Distribute</h3>
+    <table class="table table-bordered table-hover span10" style="table-layout: fixed; word-wrap: break-word; margin: 0 auto; float: none; background:white;">
+      <tr>
+	<th>#</th>
+	<th>Player 1</th>
+	<th>Player 2</th>
+	<th>Score 1</th>
+	<th>Score 2</th>
+	<th>Distributed ?</th>
+	<th>Distribute now</th>
+      </tr>
+      <tbody>
+	<% i = 0 %>
+	<% @rounds.each do |round| %>
+	<% i = i + 1 %>
+	<div style="white-space: normal">
+	  <tr>
+	    <td><%= i %></td>
+	    <% player = Player.find(round.id_player_1) %>
+	    <td><%= player.name %></td>
+	    <% player = Player.find(round.id_player_2) %>
+	    <td><%= player.name %></td>
+	    <td><%= round.score_1 %></td>
+	    <td><%= round.score_2 %></td>
+	    <td>
+	      <% if round.bet_distributed == true %>
+	      Distributed
+	      <% else %>
+	      Not distributed
+	      <% end %>
+	    </td>
+	    <td><%= link_to "Distribute !", :controller => "tournament", :action => "distri_bet", :id_match => round.id, :remote => true %></td>
+	  </tr>
+	</div>
+	<% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

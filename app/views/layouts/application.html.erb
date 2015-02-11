@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Greedy.GG</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,600italic,700,700italic,300italic' rel='stylesheet' type='text/css'>
+  <meta charset="utf-8">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/apple-touch-icon-114x114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/apple-touch-icon-72x72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="/assets/apple-touch-icon-57x57-precomposed.png">
+  <link rel="shortcut icon" href="/assets/favicon.png">
+
+  <style>
+    img{max-width:100%;  height:auto;}
+  </style>
+</head>
+<body>
+<header>
+  <% @path = request.path %>
+     <div class="container">
+          <div class="navbar">
+               <div class="navbar-inner">
+		 <a class="brand" href=
+		     <% if @path == "/" %> "#"
+		     <% else %> "/"
+		     <% end %> >
+		   <%= image_tag("restart_logo.png") %>
+		   <span class="logo_title">Greedy.<strong>GG</strong></span>
+		   <span class="logo_subtitle">
+		     E-Sport Bets
+		   </span>
+		 </a>
+		 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		   <span class="nb_left pull-left">
+		     <span class="icon-bar"></span>
+		     <span class="icon-bar"></span>
+		     <span class="icon-bar"></span>
+		   </span>
+		   <span class="nb_right pull-right">menu</span>
+		 </a>
+                 <div class="nav-collapse collapse">
+                   <ul class="nav pull-right">
+
+		     <li <% if @path == "/" %>
+			 class="active"
+			 <% end %> >
+		       <a href= <% if @path == "/" %>
+			  "#"
+			  <% else %>
+			  "/"
+			  <% end %>
+			  >Home</a></li>
+
+		     <li <% if @path.match("/bet") || @path.match("/tournament") %>
+			 class="active"
+			 <% end %> >
+		       <a href= <% if @path == "/bet" %>
+			  "#"
+			  <% else %>
+			  "/bet"
+			  <% end %>
+			  >Bet</a></li>
+
+		     <li <% if @path.match("/stats") || @path.match("/player") %>
+			 class="active"
+			 <% end %> >
+		       <a href= <% if @path == "/stats" %>
+			  "#"
+			  <% else %>
+			  "/stats"
+			  <% end %>
+			  >Players/Teams</a></li>
+
+		     <li <% if @path == "/calendar" %>
+			 class="active"
+			 <% end %> >
+		       <a href= <% if @path == "/calendar" %>
+			  "#"
+			  <% else %>
+			  "/calendar"
+			  <% end %>
+			  >Calendar</a></li>
+
+		     <li <% if @path == "/rankings" %>
+			 class="active"
+			 <% end %> >
+		       <a href= <% if @path == "/rankings" %>
+			  "#"
+			  <% else %>
+			  "/rankings"
+			  <% end %>
+			  >Rankings</a></li>
+
+		     <li <% if @path == "/users/edit" %>
+			 class="active"
+			 <% end %> >
+		       <a href= <% if @path == "/users/edit" %>
+			  "#"
+			  <% else %>
+			  "/users/edit"
+			  <% end %>
+			  >Account</a></li>
+
+                   </ul>
+                 </div>
+               </div>
+          </div>
+          <div id="social_media_wrapper">
+	    <a href="https://facebook.com/BeGreedyGG"><i class="icon-facebook"></i></a>
+	    <a href="https://twitter.com/BeGreedyGG"><i class="icon-twitter"></i></a>
+	  </div>
+	  <div id="sign">
+	    <% if user_signed_in? %>
+	    Credits : <%= current_user.credits %> / 
+	    <a href=
+	       <% if @path == "/users/edit" %> "#"
+	       <% else %> "/users/edit"
+	       <% end %> >
+	       <%= current_user.email %></a>
+
+	    <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+
+	      <% else %>
+              <a href=
+		 <% if @path == "/users/sign_in" %> "#"
+		 <% else %> "/users/sign_in"
+		 <% end %> ><i class="icon icon-user"></i>Register/Sign in</a>
+	      <% end %>
+	  </div>
+     </div>
+</header>
+
+<%= yield %>
+
+  <footer>
+    <section id="footer_teasers_wrapper">
+      <div class="container">
+	<div class="row">
+          <div class="span4 footer_teaser">
+            <h3>About us</h3>
+            <p>Website imagined, developped and launched by two young guys.</p>
+            <p><i class="icon-map-marker"></i> Bordeaux, France</p>
+            <p><i class="icon-envelope"></i> hello@restarttheme.com</p>
+          </div>
+          <div class="span4 footer_teaser">
+	    <% articles = Article.order("created_at DESC").first(1) %>
+            <h3>Latest News</h3>
+
+            <ul class="media-list">
+	      <% articles.each do |art| %>
+              <li class="media"> <a href="#" class="media-photo" ></a> <a href="#"  class="media-date"><%= art.created_at.to_time.strftime("%e") %><span><%= art.created_at.to_time.strftime("%b") %></span></a>
+		<h5 class="media-heading"><a href="#"><%= art.title %></a></h5>
+		<p><%= art.body[0, 150] %></p>
+              </li>
+	      <% end %>
+            </ul>
+
+          </div>
+          <div class="span4 footer_teaser">
+            <h3>Sponsorships</h3>
+	    <p>We are currently looking for sponsorships !</p>
+	    <p>Contact us at : </p>
+          </div>
+	</div>
+      </div>
+    </section>
+    <section id="copyright">
+      <div class="container">
+	<div class="row">
+          <div class="span6"> Copyright &copy;2013 all rights reserved </div>
+          <div class="span6 text-right"> Designed by <a href="http://www.leonart.gr">leonart</a> </div>
+	</div>
+      </div>
+    </section>
+  </footer>
+</div>
+
+</body>
+</html>

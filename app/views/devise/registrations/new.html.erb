@@ -1,0 +1,50 @@
+<script type="text/javascript">
+EnableSubmit = function(val)
+{
+  var sbmt = document.getElementById("Accept");
+
+  if (val.checked == true) {
+    sbmt.disabled = false;
+  } else {
+    sbmt.disabled = true;
+  }
+}
+</script>
+
+<div id="main">
+  <div class="container">
+
+      <div class="hgroup">
+
+	<h1>Sign up</h1>
+	<ul class="breadcrumb pull-right">
+          <li><a href="/">Home</a> <span class="divider">/</span></li>
+          <li class="active">Sign up</li>
+        </ul>
+      </div>
+
+      <div class="signup span6" style="margin-left: 25%; text-align:center">
+
+	<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+	<%= devise_error_messages! %>
+
+	<fieldset>
+
+	  <p>Sign up in just 5 seconds !</p>
+
+	  <div><input id="user_email" name="user[email]" type="email" value="" placeholder="Email" class="input-xlarge"/></div>
+
+	    <div><input id="user_password" name="user[password]" type="password" placeholder="Password" class="input-xlarge"/></div>
+
+	    <div><input id="user_password_confirmation" name="user[password_confirmation]" type="password" placeholder="Confirm password" class="input-xlarge"/></div>
+
+	    <div><label class="checkbox">
+	      <input name="checkboxes" value="Option one" type="checkbox" class="checkbox" onClick="EnableSubmit(this)" /> I agree to the <a href="#">terms and conditions</a></label></div>
+
+	    <button type="submit" class="btn btn-success btn-large delete" disabled="disabled" id="Accept" >Create your account</button>
+
+	</fieldset>
+	<% end %>
+      </div>
+  </div>
+</div>

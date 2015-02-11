@@ -1,0 +1,29 @@
+<section id="slider_wrapper">
+  <div id="main_flexslider" class="flexslider">
+    <ul class="slides">
+      <li><%= image_tag("slide/2.jpg", id: "flex") %></li>
+      <li><%= image_tag("slide/3.jpg", id: "flex") %></li>
+    </ul>
+  </div>
+</section>
+
+<div id="main">
+  <div class="container">
+    <section class="call_to_action">
+      <h3>Welcome on Greedy.GG !</h3>
+      <h4>The all new website for e-sport bets</h4>
+    </section>
+
+    <div class="index span12">
+      <h1 style="text-align:center;text-decoration:underline;">Latest news</h1>
+      <% @articles.each do |article| %>
+      <div class="group">
+	<h3 class="title_article"><%= article.title %></h3>
+	<span class="date_article">On the <%= article.created_at.to_time.strftime("%e %b %Y %H:%m %p") %></span>
+	<p class="body_article"><%= article.body %></p>
+      </div>
+      <% end %>
+      <%= paginate @articles %>
+    </div>
+  </div>
+</div>

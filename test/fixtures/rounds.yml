@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  idTournament: 1
+  idPlayer1: 1
+  idPlayer2: 1
+
+two:
+  idTournament: 1
+  idPlayer1: 1
+  idPlayer2: 1

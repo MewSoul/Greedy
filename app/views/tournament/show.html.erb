@@ -1,0 +1,193 @@
+<div class="container">
+  <div class="bet span12">
+    <h2><%= @tournament.name %></h2>
+
+    <h3 class="subtitle_tournament">Brackets :</h3>
+
+    <div style="margin: 0;text-align:center;">
+      <%- flash.each do |name, msg| -%>
+      <% if flash[:ok] %>
+      <div class="alert alert-success alert-block">
+	<button type='button' class='close' data-dismiss='alert'>x</button>
+	<%= msg %>
+      </div>
+      <% elsif flash[:ko] %>
+      <div class="alert alert-error alert-block">
+	<button type='button' class='close' data-dismiss='alert'>x</button>
+	<%= msg %>
+      </div>
+      <% end %>
+      <%- end -%>
+    </div>
+
+    <div id="bracket" style="text-align:left;position:center;overflow:auto"  >
+      <div id="refresh" style="position:left;">
+	<%= image_tag("actualisez-icone.ico", :alt => "refresh") %>
+      </div>
+      <div class="brack">
+      </div>
+    </div>
+
+    <h3 class="subtitle_tournament">Stream :</h3>
+
+    <div class="block_stream">
+      <!-- style="display:inline-block;" height="600" width="800"  -->
+      <% if request.user_agent =~ /Mobile|webOS/  %>
+      <iframe id="player" type="text/html" width="300" height="200"
+	      src="http://www.twitch.tv/garenatw/hls"
+	      frameborder="0"></iframe>
+      <% else %>
+      <object type="application/x-shockwave-flash"
+	      style="display:inline-block;"
+	      height="600"
+	      width="800"
+	      id="live_embed_player_flash"
+	      data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=<%= @tournament.url_stream %>"
+	      bgcolor="#000000">
+	<param  name="allowFullScreen"
+		value="true" />
+	<param  name="allowScriptAccess"
+		value="always" />
+	<param  name="allowNetworking"
+		value="all" />
+	<param  name="movie"
+		value="http://www.twitch.tv/widgets/live_embed_player.swf" />
+	<param  name="flashvars"
+		value="hostname=www.twitch.tv&channel=<%= @tournament.url_stream %>&auto_play=true&start_volume=25" />
+      </object>
+
+      <iframe frameborder="0"
+	      style="display:inline-block;"
+	      scrolling="no"
+	      id="chat_embed"
+	      src="http://twitch.tv/chat/embed?channel=<%= @tournament.url_chat %>&amp;popout_chat=true"
+	      height="600"
+	      width="335">
+      </iframe>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="span3">
+</div>
+
+<div class="modal hide" id="mymodal" >
+  <div>
+  </div>
+</div>
+
+</div>
+
+
+
+<script type="text/javascript">
+
+
+$(function() {
+
+<% if Rails.env.production? %>
+    var urls = "http://marsouinp.herokuapp.com/";
+<% else %>
+    var urls = "http://localhost:3000/";
+<% end %>
+
+refresh = function()
+{
+$.get(urls + "/tour/<%= @tournament.id %>", {tata:2}, function(data){
+var container = $('div#bracket .brack');
+container.bracket({init: $.parseJSON(data)});
+});
+}
+
+$("#refresh").click(function(data){
+use = false;
+refresh();});
+refresh();
+
+var use = false;
+var id = null;
+var team = null;
+
+var file = urls + "/round/add/<%=@tournament.id %>";
+
+setTimeout(function() {
+$(document).click(function(e){
+if (!$(e.target).is(".new_score") && use == true)
+send_score(file);
+if (!$(e.target).is(".new_team") && use == true)
+send_team(file);
+});
+
+
+<% if can? :manage, :all %>
+$("span[id^='result-']").click(function(data){
+if (!use)
+{
+use = true;
+id = $(this).attr("id");
+team = $(this).parent().children("b").text();
+$(this).html('<input class="new_score" type="text"></input>');
+$('input').focus();
+}
+});
+
+
+
+
+$("div[id^='team-']").click(function(data){
+if (!use)
+{
+id = $(this).attr("id");
+$(this).children("b").html('<input class="new_team" type="text"></input>');
+$('.new_team').focus();
+use = true;
+}
+});
+
+
+send_score = function(userData){
+var score = $(".new_score").val();
+if (!id || !team || !use || typeof score == "undefined" || score == "")
+return false;
+$("#"+id).html(score);
+match = $("#" + id).closest(".match").attr("id");
+id = id.split("-");
+$.get(userData, {match:match, id:id[1], team:team, score:score}, function(){});
+id = null;
+team = null;
+use = false;
+}
+
+send_team = function(userData){
+var team = $(".new_team").val();
+if (!id || !team || !use || typeof team == "undefined" || team == "")
+return false;
+var score = $("#" + id).text();
+$("#"+id).children("b").html(team);
+match = $("#" + id).closest(".match").attr("id");
+id = id.split("-");
+$.get(userData, {match:match, id:id[1], team:team, score:score}, function(){});
+id = null;
+team = null;
+use = false;
+}
+
+<% else %>
+$(".match").click(function(data){
+
+
+jQuery.noConflict();
+var url = urls + "/gre/<%= @tournament.id %>/" + $(this).attr('id');
+var res = $("#mymodal").load(url, function(response, status, xhr){
+if (status == "error")
+return ;
+else
+res.modal("show");
+});
+});
+
+<% end %>
+}, 1000);
+});
+</script>

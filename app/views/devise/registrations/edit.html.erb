@@ -1,0 +1,89 @@
+<div id="main">
+  <div class="container">
+
+    <div class="hgroup">
+      <h1>Edit your account</h1>
+        <ul class="breadcrumb pull-right">
+          <li><a href="/">Home</a> <span class="divider">/</span></li>
+          <li class="active">Edit your account</li>
+        </ul>
+      </div>
+
+    <div class="forget span12" style="text-align:center">
+
+	  <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f| %>
+	  <%= devise_error_messages! %>
+
+	  <br/><h3>Update your information</h3><br/>
+
+	  <div><%= f.email_field :email, :autofocus => true %></div>
+
+	  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+	  <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+	  <% end %>
+
+	  <div><input autocomplete="off" id="user_password" name="user[password]" type="password" placeholder="New password (leave blank if no changes)" /></div>
+
+	  <div><input id="user_password_confirmation" name="user[password_confirmation]" type="password" placeholder="Confirm password"/></div>
+
+	  <div><input id="user_current_password" name="user[current_password]" type="password" placeholder="Current password"/></div>
+
+	  <div><button type="submit" name="submit" class="btn btn-primary btn-large">Update</button></div>
+	  <% end %>
+	  <br/>
+
+	  <h3>Your bets</h3>
+
+	  <div>
+	  <table class="table table-bordered table-hover span10" style="table-layout: fixed; word-wrap: break-word; margin: 0 auto; float: none; background:white;">
+	    <tr>
+	      <th>#</th>
+	      <th>Date</th>
+	      <th>Tournament</th>
+	      <th>Match</th>
+	      <th>You bet</th>
+	      <th>You bet on</th>
+	      <th>Winner</th>
+	      <th>Earnings</th>
+	    </tr>
+	    <tbody>
+	      <% i = 0 %>
+	      <% bets = Mise.where("user_id = ?", current_user.id) %>
+	      <% bets.each do |bet| %>
+	      <% i = i + 1 %>
+	      <div style="white-space: normal">
+		<tr>
+		  <td><%= i %></td>
+		  <td><%= bet.created_at.strftime('%B %e %Y') %></td>
+		  <% match = Round.find(bet.match_id) %>
+		  <% tournament = Tournament.find(match.tournament_id) %>
+		  <td><%= tournament.name %></td>
+		  <% player1 = Player.find(match.id_player_1) %>
+		  <% player2 = Player.find(match.id_player_2) %>
+		  <td><%= player1.name %> vs <%= player2.name %></td>
+		  <td><%= bet.amount %></td>
+		  <td>
+		    <% if bet.player_id == player1.id %>
+		    <%= player1.name %>
+		    <% elsif bet.player_id == player2.id %>
+		    <%= player2.name %>
+		    <% end %>
+		  </td>
+		  <td>
+		    <% if match.score_1.to_f > match.score_2.to_f %>
+		    <%= player1.name %>
+		    <% elsif match.score_2.to_f > match.score_1.to_f %>
+		    <%= player2.name %>
+		    <% end %>
+		  </td>
+		  <td><%= bet.gain %></td>
+		</tr>
+	      </div>
+	      <% end %>
+	    </tbody>
+	  </table>
+	  </div>
+	  </br>
+    </div>
+  </div>
+</div>

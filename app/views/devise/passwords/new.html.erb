@@ -1,0 +1,28 @@
+<div id="main">
+  <div class="container">
+
+
+      <div class="hgroup">
+        <h1>Forgot your password ?</h1>
+        <ul class="breadcrumb pull-right">
+          <li><a href="/">Home</a> <span class="divider">/</span></li>
+          <li class="active">Forgot your password ?</li>
+        </ul>
+      </div>
+
+        <div class="forget span6" style="margin-left: 25%; text-align:center">
+	  <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
+	  <%= devise_error_messages! %>
+
+	    <fieldset>
+            <p class="sign_title">Get instructions by email</p>
+
+	    <div><input id="user_email" name="user[email]" type="email" value="" placeholder="Email" class="input-large" /></div>
+
+	  <button type="submit" class="btn btn-primary btn-large">Reset password</button>
+
+	  </fieldset>
+	  <% end %>
+	  </div>
+  </div>
+</div>
